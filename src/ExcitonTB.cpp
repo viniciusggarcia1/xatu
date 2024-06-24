@@ -380,9 +380,18 @@ double ExcitonTB::coulomb(double r){
     return (r != 0) ? ec/(4E-10*PI*eps0*r) : ec*1E10/(4*PI*eps0*regularization);    
 }
 
+//Teste 01
 
 //+++++++++++++++++++++++++++++++++++++++++++ W1D Potential ++++++++++++++++++++++++++++++++++++++++++++++
-double ExcitonTB::W1D(double r, double L, double alpha_1D, int nqx) {
+
+
+
+
+double ExcitonTB::W1D(double r) {
+    //double ExcitonTB::W1D(double r, double L, double alpha_1D, int nqx) {
+    double L=1E-10;
+    double alpha_1D=2E-20;
+    int nqx=1000;
     // Defining variables
     std::complex<double> result(0, 0);
     std::vector<double> k0, qx(nqx), eps_1D;
@@ -394,7 +403,6 @@ double ExcitonTB::W1D(double r, double L, double alpha_1D, int nqx) {
     for (int i = 0; i < nqx; ++i) {
         qx[i] = -PI / a + i * (2 * PI / a) / (nqx - 1);
     }
-
 
     // Defining k0 vector (Bessel function)
     for (double q : qx) {
@@ -427,9 +435,8 @@ double ExcitonTB::W1D(double r, double L, double alpha_1D, int nqx) {
     double resultModule = std::sqrt((result.real() * result.real()) + (result.imag() * result.imag()));
 
     return resultModule;
-}
+};
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 /**
  * Method to select the potential to be used in the of the exciton calculation.
@@ -444,13 +451,13 @@ potptr ExcitonTB::selectPotential(std::string potential){
     else if(potential == "coulomb"){
         return &ExcitonTB::coulomb;
     }
-    else if(potential == "W1D"){
+    else if(potential == "w1d"){
         return &ExcitonTB::W1D;
     }
 
 
     else{
-        throw std::invalid_argument("selectPotential(): potential must be either 'keldysh', 'coulomb' or 'W1D'");
+        throw std::invalid_argument("selectPotential(): potential must be either 'keldysh', 'coulomb' or 'w1d'");
     }
 }
 

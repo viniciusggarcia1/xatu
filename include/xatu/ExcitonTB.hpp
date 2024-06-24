@@ -102,7 +102,7 @@ class ExcitonTB : public Exciton<SystemTB> {
         double keldysh(double);
         void STVH0(double, double*);
         double coulomb(double);
-        double W1D(double, double, double, int);
+        double W1D(double);
         potptr selectPotential(std::string);
 
         // Fourier transforms

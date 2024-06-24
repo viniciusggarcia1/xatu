@@ -1,7 +1,7 @@
 # Compiler & compiler flags
 CC = g++
 FC = gfortran
-CFLAGS = -O2 -Wall -lm
+CFLAGS = -O2 -Wall -lm -Wno-sign-compare 
 FFLAGS = -O2 -Wall -Wno-tabs -lm
 
 # Include folders

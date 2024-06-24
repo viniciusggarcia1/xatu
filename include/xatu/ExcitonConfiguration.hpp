@@ -52,7 +52,7 @@ class ExcitonConfiguration : public ConfigurationBase{
 
     public:
         configuration excitonInfo;
-        std::vector<std::string> supportedPotentials = {"keldysh", "coulomb", "W1D"};
+        std::vector<std::string> supportedPotentials = {"keldysh", "coulomb", "w1d"};
     
     public:
         ExcitonConfiguration();
