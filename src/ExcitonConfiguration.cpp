@@ -107,6 +107,10 @@ void ExcitonConfiguration::parseContent(){
         else if(arg == "regularization"){
             excitonInfo.regularization = parseScalar<double>(content[0]);
         }
+        else if(arg == "w1d.parameters"){
+            std::vector<double> param = parseLine<double>(content[0]);
+            excitonInfo.w1d_param = arma::vec(param);
+        }
         else{    
             std::cout << "Unexpected argument: " << arg << ", skipping block..." << std::endl;
         }

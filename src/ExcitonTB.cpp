@@ -77,6 +77,13 @@ void ExcitonTB::initializeExcitonAttributes(const ExcitonConfiguration& cfg){
     }
     this->potential_ = cfg.excitonInfo.potential;
     this->exchangePotential_ = cfg.excitonInfo.exchangePotential;
+
+    // If W1D pot., assign the corresponding parameters
+    if (potential_ == "w1d"){
+        this->L = cfg.excitonInfo.w1d_param(0);
+        this->alpha_1D = cfg.excitonInfo.w1d_param(1);
+        this->nqx = cfg.excitonInfo.w1d_param(2);
+    }
 }
 
 /**
@@ -388,16 +395,15 @@ double ExcitonTB::coulomb(double r){
 
 
 double ExcitonTB::W1D(double r) {
-    //double ExcitonTB::W1D(double r, double L, double alpha_1D, int nqx) {
-    double L=1E-10;
-    double alpha_1D=2E-20;
-    int nqx=1000;
     // Defining variables
-    std::complex<double> result(0, 0);
-    std::vector<double> k0, qx(nqx), eps_1D;
-    std::vector<std::complex<double>> exptL, y;
+    //std::complex<double> result(0, 0);
+    std::vector<double> k0, qx(nqx), eps_1D, exptL, y;
+    //std::vector<std::complex<double>> exptL, y;
+    double result=0;
+    r=r*1.8897259886;
+    double a = arma::norm(system->bravaisLattice.row(0))*1.8897259886;
 
-    double a = arma::norm(system->bravaisLattice.row(0));
+    //double a = 8.1652;
 
     // Defining qx vector
     for (int i = 0; i < nqx; ++i) {
@@ -406,9 +412,10 @@ double ExcitonTB::W1D(double r) {
 
     // Defining k0 vector (Bessel function)
     for (double q : qx) {
-        double k = -log((L * std::abs(q)) / 4);
+        double k = std::cyl_bessel_k(0, L * std::abs(q) / 2.0);
         k0.push_back(k);
     }
+
 
     // Defining dielectric function
     for (size_t i = 0; i < qx.size(); ++i) {
@@ -416,15 +423,15 @@ double ExcitonTB::W1D(double r) {
         eps_1D.push_back(eps1D);
     }
 
-    // Calculating the exponential
+    // Calculating the exponential (only cosseno)
     for (size_t j = 0; j < qx.size(); ++j) {
-        exptL.push_back(std::exp(std::complex<double>(0, 1) * qx[j] * r));
+        exptL.push_back(std::cos(qx[j] * r));
     }
 
     // Trapezoidal integration function
     for (size_t j = 0; j < qx.size(); ++j) {
-        y.push_back((exptL[j] * k0[j] * (std::pow(ec, 2) / (2.0 * PI))) / eps_1D[j]);
-    }
+        y.push_back(2.0*(exptL[j] * k0[j] * (std::pow(1, 2) / (2.0 * PI))) / eps_1D[j]);
+    } //variável ec cambiada
 
     // Performing the W1D integral
     for (size_t i = 1; i < y.size(); ++i) {
@@ -432,9 +439,9 @@ double ExcitonTB::W1D(double r) {
     }
 
     // Calculating the modulus of the potential
-    double resultModule = std::sqrt((result.real() * result.real()) + (result.imag() * result.imag()));
+    //double resultModule = std::sqrt((result.real() * result.real()) + (result.imag() * result.imag()));
 
-    return resultModule;
+    return result*27.2114;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

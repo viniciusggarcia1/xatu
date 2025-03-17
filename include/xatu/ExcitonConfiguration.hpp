@@ -48,6 +48,8 @@ class ExcitonConfiguration : public ConfigurationBase{
         std::string exchangePotential = "keldysh";
         // Regularization distance
         double regularization = 0.0;
+        // W1D parameters
+        arma::vec w1d_param = {};
     };
 
     public:

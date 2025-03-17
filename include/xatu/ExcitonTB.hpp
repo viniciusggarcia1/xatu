@@ -31,6 +31,10 @@ class ExcitonTB : public Exciton<SystemTB> {
         double eps_m_, eps_s_, r0_;
         double regularization_;
 
+        // W1D parameters
+        double L, alpha_1D;
+        int nqx;
+
         // Flags
         std::string gauge_ = "lattice";
         std::string mode_  = "realspace";
